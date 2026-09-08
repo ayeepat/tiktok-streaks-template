@@ -173,6 +173,16 @@ who's already been messaged today, so you can't accidentally double-send.
 
 ---
 
+## Stuck? Ask an AI
+
+[HELPER-PROMPT.md](HELPER-PROMPT.md) has a block of text you can paste into any
+AI assistant. It explains this whole project so you don't have to, and it tells
+the AI never to ask you for your cookies, key or password.
+
+If an AI ever asks you for those anyway — stop. Nothing here needs them.
+
+---
+
 ## Troubleshooting
 
 **"the saved session has expired"**
