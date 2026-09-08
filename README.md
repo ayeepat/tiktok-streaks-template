@@ -165,6 +165,10 @@ rm .secrets/tiktok-cookies.json
 
 ## Step 6 — Test it
 
+First, make sure GitHub will actually run it. Open your repo's **Actions** tab.
+If you see a button offering to enable workflows, click it — GitHub switches
+them off by default on some new repos, and nothing will run until you do.
+
 ```bash
 npm run status
 ```
