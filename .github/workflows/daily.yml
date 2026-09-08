@@ -1,0 +1,74 @@
+name: Daily streak messages
+
+on:
+  schedule:
+    # 05:00 UTC = 08:00 Europe/Moscow. Once a day: a second run would roughly
+    # double Browserbase minutes, and the free tier does not have the headroom.
+    # If you change this, change `timezone` in config/friends.json to match.
+    - cron: "0 5 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Walk the flow without actually sending"
+        type: boolean
+        required: false
+        default: false
+
+# Needed to commit state/sent.json back, which is how the evening run knows
+# who the morning run already messaged.
+permissions:
+  contents: write
+
+# Never let two runs drive the same TikTok account at once.
+concurrency:
+  group: tiktok-browser
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Send messages
+        run: npm run send
+        env:
+          BROWSERBASE_API_KEY: ${{ secrets.BROWSERBASE_API_KEY }}
+          BROWSERBASE_PROJECT_ID: ${{ secrets.BROWSERBASE_PROJECT_ID }}
+          BROWSERBASE_CONTEXT_ID: ${{ secrets.BROWSERBASE_CONTEXT_ID }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          FRIENDS_JSON: ${{ secrets.FRIENDS_JSON }}
+          BROWSERBASE_REGION: ${{ vars.BROWSERBASE_REGION }}
+
+      # Runs even when sending failed partway, so friends who *were* messaged
+      # are recorded and the retry run does not message them twice.
+      - name: Record who was messaged
+        if: always()
+        run: |
+          if [ -z "$(git status --porcelain state/)" ]; then
+            echo "No state changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add state/
+          git commit -m "chore: record sent messages [skip ci]"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Upload failure screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: failure-${{ github.run_id }}
+          path: artifacts/
+          if-no-files-found: ignore
+          retention-days: 7

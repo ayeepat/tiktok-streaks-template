@@ -1,0 +1,15 @@
+{
+  "timezone": "Europe/London",
+  "minDelaySeconds": 5,
+  "maxDelaySeconds": 15,
+  "friends": [
+    {
+      "username": "example_friend_one",
+      "messages": ["hey", "yo", "👋"]
+    },
+    {
+      "username": "example_friend_two",
+      "messages": ["🔥"]
+    }
+  ]
+}

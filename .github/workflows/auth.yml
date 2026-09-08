@@ -1,0 +1,39 @@
+name: TikTok auth (one-time)
+
+# Manual only. Opens a remote browser and prints a live-view link you open in
+# your own browser to log into TikTok by hand. Re-run this whenever the daily
+# job fails with "the saved session has expired".
+on:
+  workflow_dispatch:
+    inputs:
+      timeout_minutes:
+        description: "Minutes to keep the browser open for you to log in (free plan caps sessions at 15)"
+        required: false
+        default: "10"
+
+concurrency:
+  group: tiktok-browser
+  cancel-in-progress: false
+
+jobs:
+  auth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Log in to TikTok
+        run: npm run auth
+        env:
+          BROWSERBASE_API_KEY: ${{ secrets.BROWSERBASE_API_KEY }}
+          BROWSERBASE_PROJECT_ID: ${{ secrets.BROWSERBASE_PROJECT_ID }}
+          BROWSERBASE_CONTEXT_ID: ${{ secrets.BROWSERBASE_CONTEXT_ID }}
+          AUTH_TIMEOUT_MINUTES: ${{ inputs.timeout_minutes }}
+          BROWSERBASE_REGION: ${{ vars.BROWSERBASE_REGION }}

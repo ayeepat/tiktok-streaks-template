@@ -1,0 +1,28 @@
+{
+  "name": "tiktok-streaks",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Sends one TikTok DM per friend per day to maintain streaks. GitHub Actions + Browserbase.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "auth": "tsx src/auth.ts",
+    "send": "tsx src/send.ts",
+    "typecheck": "tsc --noEmit",
+    "import-cookies": "tsx src/import-cookies.ts",
+    "status": "tsx src/status.ts",
+    "push-config": "gh secret set FRIENDS_JSON < config/friends.json"
+  },
+  "dependencies": {
+    "@browserbasehq/sdk": "^2.6.0",
+    "dotenv": "^16.4.7",
+    "playwright-core": "^1.49.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}

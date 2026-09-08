@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.local
+.secrets/
+artifacts/
+dist/
+*.log
+.DS_Store
+
+# Your real friend list. Never committed — that way your friends' usernames
+# stay off GitHub even if this repo is ever made public.
+config/friends.json
