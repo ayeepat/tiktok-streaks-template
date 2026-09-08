@@ -1,0 +1,40 @@
+name: 1. Log in to TikTok
+
+# Run this once, from the Actions tab, after setting the TIKTOK_COOKIES secret.
+# It takes the cookies from your browser and stores them in Browserbase so the
+# daily job can use them. You never need a terminal for this.
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: tiktok-browser
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Import cookies
+        run: npm run import-cookies
+        env:
+          BROWSERBASE_API_KEY: ${{ secrets.BROWSERBASE_API_KEY }}
+          BROWSERBASE_CONTEXT_ID: ${{ secrets.BROWSERBASE_CONTEXT_ID }}
+          BROWSERBASE_REGION: ${{ vars.BROWSERBASE_REGION }}
+          TIKTOK_COOKIES: ${{ secrets.TIKTOK_COOKIES }}
+
+      - name: What to do next
+        if: success()
+        run: |
+          echo "If a BROWSERBASE_CONTEXT_ID was printed above, save it as a secret now."
+          echo "Then delete the TIKTOK_COOKIES secret — it has done its job and is"
+          echo "a live login for your account. Settings -> Secrets and variables -> Actions."

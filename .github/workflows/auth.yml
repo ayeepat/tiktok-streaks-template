@@ -1,4 +1,4 @@
-name: TikTok auth (one-time)
+name: Alternative login (usually does not work - see README)
 
 # Manual only. Opens a remote browser and prints a live-view link you open in
 # your own browser to log into TikTok by hand. Re-run this whenever the daily
