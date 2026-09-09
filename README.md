@@ -205,6 +205,14 @@ trying to get around it. Open TikTok in your normal browser, clear whatever it
 asks, then run the workflow again. If it keeps happening, your region is
 probably far from where you normally log in.
 
+**It didn't run this morning, and I got no email**
+
+GitHub's scheduler is best-effort — it delays and sometimes silently drops
+scheduled runs. That's why there are three send times a day, not one: if the
+morning is dropped, the later ones catch it, and they cost nothing when there's
+nothing to do. A watchdog at 21:07 local emails you if the day ends with anyone
+still unmessaged. You can always run **2. Send messages** manually.
+
 **Nothing runs at all**
 
 Actions tab → check workflows are enabled. GitHub switches them off by default

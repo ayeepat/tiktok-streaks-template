@@ -2,10 +2,15 @@ name: 2. Send messages
 
 on:
   schedule:
-    # 05:00 UTC = 08:00 Europe/Moscow. Once a day: a second run would roughly
-    # double Browserbase minutes, and the free tier does not have the headroom.
-    # If you change this, change `timezone` in config/friends.json to match.
-    - cron: "0 5 * * *"
+    # Three attempts. GitHub's scheduler is best-effort and DOES drop runs —
+    # this project lost its very first scheduled run that way.
+    #
+    # Retries are nearly free: if the morning run already messaged everyone, the
+    # later ones exit in ~2 seconds without opening a browser, costing no
+    # Browserbase minutes. Never use :00 — it is the most congested slot.
+    - cron: "17 5 * * *"   # 08:17 UTC+3 — the real one
+    - cron: "23 9 * * *"   # backup if the morning was dropped
+    - cron: "41 13 * * *"  # last chance before the watchdog shouts
   workflow_dispatch:
     inputs:
       dry_run:

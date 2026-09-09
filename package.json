@@ -13,7 +13,8 @@
     "typecheck": "tsc --noEmit",
     "import-cookies": "tsx src/import-cookies.ts",
     "status": "tsx src/status.ts",
-    "push-config": "gh secret set FRIENDS_JSON < config/friends.json"
+    "push-config": "gh secret set FRIENDS_JSON < config/friends.json",
+    "check-today": "tsx src/check-today.ts"
   },
   "dependencies": {
     "@browserbasehq/sdk": "^2.6.0",
