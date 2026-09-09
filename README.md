@@ -205,6 +205,17 @@ trying to get around it. Open TikTok in your normal browser, clear whatever it
 asks, then run the workflow again. If it keeps happening, your region is
 probably far from where you normally log in.
 
+**It never runs on its own / nothing happens in the morning**
+
+GitHub's own scheduler is unreliable — on the account this template was built
+on it delivered **zero** scheduled runs, ever, while manual runs worked every
+time. If your daily job never fires by itself, that's this.
+
+The fix is in [cloudflare-worker/](cloudflare-worker/): a free Cloudflare Worker
+that starts the workflow through GitHub's API on a cron that actually fires.
+~15 minutes, browser only. Check the Actions tab first — if you see runs
+appearing daily on their own, you don't need it.
+
 **It didn't run this morning, and I got no email**
 
 GitHub's scheduler is best-effort — it delays and sometimes silently drops
